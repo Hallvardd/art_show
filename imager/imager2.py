@@ -2,6 +2,7 @@ from PIL import Image
 from PIL import ImageFilter
 from PIL import ImageEnhance
 from PIL import ImageDraw
+import math
 
 
 class Imager():
@@ -9,6 +10,7 @@ class Imager():
                       'black': (0, 0, 0)}
     _image_dir_ = "images/"
     _image_ext_ = "jpeg"
+    _pi = math.pi
 
 
 
@@ -196,6 +198,22 @@ class Imager():
 
     def mortun(self, im2, levels=5, scale=0.75):
         return self.tunnel(levels, scale).morph4(im2.tunnel(levels, scale))
+
+    # def make_line(self,x1,y1,x2,y2):
+    #
+    #
+    # def sprial(self, points=25):
+    #     interval = (self._pi)/points
+    #     value = 0
+    #     radius = 1
+    #     origin_x = int(self.xmax/2)
+    #     origin_y = int(self.ymax/2)
+    #     last_x = int(self.xmax/2)
+    #     last_y = int(self.ymax/2)
+    #     x = None
+    #     y = None
+    #     while radius < self.ymax:
+    #
 
 
 
