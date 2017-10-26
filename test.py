@@ -58,6 +58,7 @@ def sprial(points=25 ,xmax=100, ymax=100):
             if first_out:
 
                 first_out = False
+                # Calculates where the line would exit the picture
                 if x_flag:
                     x_flag = False
                     tan = ((holder_c[1] - holder_l[1])/(holder_c[0] - holder_l[0]))
@@ -72,7 +73,7 @@ def sprial(points=25 ,xmax=100, ymax=100):
         else:
             if not first_out:
                 first_out = True
-
+                # Calculates where the line would enter the picture.
                 if x_flag:
                     x_flag = False
                     tan = ((y - holder_c[1])/(x - holder_c[0]))
