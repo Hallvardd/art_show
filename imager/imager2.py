@@ -1,6 +1,7 @@
 from PIL import Image
 from PIL import ImageFilter
 from PIL import ImageEnhance
+from PIL import ImageDraw
 
 
 class Imager():
@@ -8,6 +9,8 @@ class Imager():
                       'black': (0, 0, 0)}
     _image_dir_ = "images/"
     _image_ext_ = "jpeg"
+
+
 
     def __init__(self, fname=False, dir=None, ext=None, image=False, width=100, height=100, background='black',
                  mode='RGB'):
@@ -195,6 +198,7 @@ class Imager():
         return self.tunnel(levels, scale).morph4(im2.tunnel(levels, scale))
 
 
+
 ### *********** TESTS ************************
 
 def ptest1(fid1='trump', fid2="pinocchio",steps=5,newsize=250):
@@ -219,4 +223,19 @@ def ptest3(fid1='pinocchio', fid2="donaldduck",newsize=250,levels=4,scale=0.75):
     box.display()
     return box
 
+ptest3()
 
+
+# • ImageEnhance
+# • ImageFilter
+# • ImageDraw
+# • ImageOps
+
+# Idea 1) Spiral(start, start_rad, expansion_rate) ) (might require a lot of work)
+#         Will need a set distance between the edges of the edges on the spiral will.
+#         And will need to expand as you proceed, circle equation.
+#         control for bleeding over the original edge, if it is possible to cut, cut.
+#         1) find center of circle.
+#         2) for a interval on 2pi calculate sin and cosine values find X and Y values
+
+# Idea 2)
