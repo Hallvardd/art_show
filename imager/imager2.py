@@ -199,21 +199,78 @@ class Imager():
     def mortun(self, im2, levels=5, scale=0.75):
         return self.tunnel(levels, scale).morph4(im2.tunnel(levels, scale))
 
-    # def make_line(self,x1,y1,x2,y2):
-    #
-    #
-    # def sprial(self, points=25):
-    #     interval = (self._pi)/points
-    #     value = 0
-    #     radius = 1
-    #     origin_x = int(self.xmax/2)
-    #     origin_y = int(self.ymax/2)
-    #     last_x = int(self.xmax/2)
-    #     last_y = int(self.ymax/2)
-    #     x = None
-    #     y = None
-    #     while radius < self.ymax:
-    #
+    def spiral(self, points=25, colour=(0,0,0)):
+
+        draw = ImageDraw.Draw(self.image)
+        x_max = self.image.size[0]
+        y_max = self.image.size[1]
+        cut_off = max(x_max, y_max)
+        interval = (self._pi) / points
+        value = 0.0
+        radius = 1
+        origin_x = int(x_max / 2)
+        origin_y = int(y_max / 2)
+        last_x = int(x_max / 2)
+        last_y = int(y_max / 2)
+        x = 0
+        y = 0
+        first_out = True
+        holder_l = (0, 0)
+        holder_c = (0, 0)
+        x_flag = False
+        while radius < cut_off:
+            x = origin_x + int(math.cos(value) * radius)
+            y = origin_y + int(math.sin(value) * radius)
+            if (x >= x_max or y >= y_max) or (y <= 0 or x <= 0):
+                holder_l = (last_x, last_y)  # holds last values in case of changes
+                holder_c = (x, y)  # hold current values in case of changes
+                last_x = x
+                last_y = y
+                if (x >= x_max): last_x = x_max; x_flag = True
+                if x <= 0: last_x = 0; x_flag = True
+                if (y >= y_max): last_y = y_max
+                if y <= 0: last_y = 0
+
+                if first_out:
+
+                    first_out = False
+                    # Calculates where the line would exit the picture
+                    if x_flag:
+                        x_flag = False
+                        tan = ((holder_c[1] - holder_l[1]) / (holder_c[0] - holder_l[0]))
+                        y = holder_l[1] + int(tan * (last_x - holder_l[0]))
+                        draw.line(holder_l + (last_x, y), colour)
+                    else:
+                        tan = ((holder_c[0] - holder_l[0]) / (holder_c[1] - holder_l[1]))
+                        x = holder_l[0] + int(tan * (last_y - holder_l[1]))
+                        draw.line(holder_l + (x, last_y), colour)
+
+
+            else:
+                if not first_out:
+                    first_out = True
+                    # Calculates where the line would enter the picture.
+                    if x_flag:
+                        x_flag = False
+                        tan = ((y - holder_c[1]) / (x - holder_c[0]))
+                        last_y = holder_c[1] - int(tan * (holder_c[0] - last_x))
+                        draw.line((last_x, last_y) + (x, y), colour)
+                    else:
+                        tan = ((x - holder_c[0]) / (y - holder_c[1]))
+                        last_x = holder_c[0] - int(tan * (holder_c[1] - last_y))
+                        draw.line((last_x, last_y) + (x, y), colour)
+                        pass
+
+
+                # im.putpixel((x, y), (0,0,0))
+                else:
+                    draw.line((last_x, last_y) + (x, y), colour)
+                last_x = x
+                last_y = y
+            radius += 10 / points
+            value += interval
+        del draw
+        return self
 
 
 
@@ -241,7 +298,14 @@ def ptest3(fid1='pinocchio', fid2="donaldduck",newsize=250,levels=4,scale=0.75):
     box.display()
     return box
 
-ptest3()
+def ptest4(fid1='pinocchio',newsize=250,levels=4,scale=0.75):
+    im1 = Imager(fid1)
+    box = im1.spiral().tunnel()
+    box.display()
+    return box
+
+
+ptest4()
 
 
 # • ImageEnhance

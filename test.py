@@ -24,11 +24,13 @@ del draw
 pi = math.pi
 
 
-def sprial(points=25 ,xmax=100, ymax=100):
-    im = Image.open(generate_adr("pinocchio"))
+def spiral(points=25 ,xmax=100, ymax=100):
+    colour = (200,200,0)
+    im = Image.open(generate_adr("library"))
     draw = ImageDraw.Draw(im)
     xmax = im.size[0]
     ymax = im.size[1]
+    cut_off = max(xmax,ymax)
     interval = (_pi) / points
     value = 0.0
     radius = 1
@@ -39,10 +41,10 @@ def sprial(points=25 ,xmax=100, ymax=100):
     x = 0
     y = 0
     first_out = True
-    holder_l = None
-    holder_c = None
+    holder_l = (0,0)
+    holder_c = (0,0)
     x_flag = False
-    while radius < xmax:
+    while radius < cut_off:
         x = origin_x + int(math.cos(value)*radius)
         y = origin_y + int(math.sin(value)*radius)
         if (x >= xmax or y >= ymax) or (y <= 0 or x <= 0):
@@ -63,11 +65,11 @@ def sprial(points=25 ,xmax=100, ymax=100):
                     x_flag = False
                     tan = ((holder_c[1] - holder_l[1])/(holder_c[0] - holder_l[0]))
                     y = holder_l[1] + int(tan*(last_x-holder_l[0]))
-                    draw.line(holder_l +(last_x,y),(100,100,100))
+                    draw.line(holder_l +(last_x,y),colour)
                 else:
                     tan = ((holder_c[0] - holder_l[0]) / (holder_c[1] - holder_l[1]))
                     x = holder_l[0] + int(tan * (last_y - holder_l[1]))
-                    draw.line(holder_l + (x, last_y), (100, 100, 100))
+                    draw.line(holder_l + (x, last_y), colour)
 
 
         else:
@@ -78,21 +80,21 @@ def sprial(points=25 ,xmax=100, ymax=100):
                     x_flag = False
                     tan = ((y - holder_c[1])/(x - holder_c[0]))
                     last_y = holder_c[1] - int(tan*(holder_c[0]-last_x))
-                    draw.line((last_x,last_y) + (x,y),(100,100,100))
+                    draw.line((last_x,last_y) + (x,y),colour)
                 else:
                     tan = ((x - holder_c[0]) / (y - holder_c[1]))
                     last_x = holder_c[0] - int(tan * (holder_c[1]-last_y))
-                    draw.line((last_x, last_y) + (x, y), (100, 100, 100))
+                    draw.line((last_x, last_y) + (x, y), colour)
                     pass
 
 
             #im.putpixel((x, y), (0,0,0))
             else:
-                draw.line((last_x, last_y) + (x,y), (100,100,100))
+                draw.line((last_x, last_y) + (x,y), colour)
             last_x = x
             last_y = y
         radius += 10/points
         value += interval
     del draw
-    im.show()
-sprial(20)
+
+spiral(2)
