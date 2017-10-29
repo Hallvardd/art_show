@@ -9,7 +9,7 @@ class Imager():
     _pixel_colors_ = {'red': (255, 0, 0), 'green': (0, 255, 0), 'blue': (0, 0, 255), 'white': (255, 255, 255),
                       'black': (0, 0, 0)}
     _image_dir_ = "images/"
-    _image_ext_ = "jpeg"
+    _image_ext_ = "gif"
     _pi = math.pi
 
 
@@ -199,7 +199,7 @@ class Imager():
     def mortun(self, im2, levels=5, scale=0.75):
         return self.tunnel(levels, scale).morph4(im2.tunnel(levels, scale))
 
-    def spiral(self, points=25, colour=(0,0,0)):
+    def spiral(self, points=50, colour=(0,0,0)):
 
         draw = ImageDraw.Draw(self.image)
         x_max = self.image.size[0]
@@ -245,7 +245,6 @@ class Imager():
                         x = holder_l[0] + int(tan * (last_y - holder_l[1]))
                         draw.line(holder_l + (x, last_y), colour)
 
-
             else:
                 if not first_out:
                     first_out = True
@@ -270,6 +269,17 @@ class Imager():
             radius += 10 / points
             value += interval
         del draw
+        return self
+
+    def mirror(self, y_lim=1):
+        if 0 > y_lim or y_lim > 1:
+            y_lim = 1
+        for y in range(int(self.ymax*y_lim)):
+            for x in range(int(self.xmax/2)):
+                p1 = self.get_pixel(x, y)
+                p2 = self.get_pixel(self.xmax - 1 - x, y)
+                self.set_pixel(x,y, p2)
+                self.set_pixel(self.xmax - x -1, y, p1)
         return self
 
 
@@ -298,11 +308,14 @@ def ptest3(fid1='pinocchio', fid2="donaldduck",newsize=250,levels=4,scale=0.75):
     box.display()
     return box
 
-def ptest4(fid1='pinocchio',newsize=250,levels=4,scale=0.75):
+def ptest4(fid1='pinocchio', fid2="arduino" ,newsize=250,levels=4,scale=0.75):
     im1 = Imager(fid1)
-    box = im1.spiral().tunnel()
-    box.display()
-    return box
+    im2 = Imager(fid2)
+    im2 = im2.resize(im1.xmax, im1.ymax)
+    im1 = im1.concat_horiz(im2)
+    im1.spiral(colour=(255,60,170))
+    im1.mirror(0.50)
+    im1.display()
 
 
 ptest4()
@@ -313,11 +326,3 @@ ptest4()
 # • ImageDraw
 # • ImageOps
 
-# Idea 1) Spiral(start, start_rad, expansion_rate) ) (might require a lot of work)
-#         Will need a set distance between the edges of the edges on the spiral will.
-#         And will need to expand as you proceed, circle equation.
-#         control for bleeding over the original edge, if it is possible to cut, cut.
-#         1) find center of circle.
-#         2) for a interval on 2pi calculate sin and cosine values find X and Y values
-
-# Idea 2)

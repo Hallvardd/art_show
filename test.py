@@ -24,9 +24,8 @@ del draw
 pi = math.pi
 
 
-def spiral(points=25 ,xmax=100, ymax=100):
+def spiral(im, points=25 ,xmax=100, ymax=100):
     colour = (200,200,0)
-    im = Image.open(generate_adr("library"))
     draw = ImageDraw.Draw(im)
     xmax = im.size[0]
     ymax = im.size[1]
@@ -96,5 +95,41 @@ def spiral(points=25 ,xmax=100, ymax=100):
         radius += 10/points
         value += interval
     del draw
+    return im
 
-spiral(2)
+def mirror(im, y_lim=1):
+    if 0 > y_lim or y_lim > 1:
+        y_lim = 1
+    for y in range(int(im.size[1]*y_lim)):
+        for x in range(int(im.size[0]/2)):
+            p1 = im.getpixel((x, y))
+            p2 = im.getpixel(((im.size[0] - 1 - x), y))
+            im.putpixel((x,y), p2)
+            im.putpixel((im.size[0] - 1 - x, y), p1)
+    return im
+
+def reflect(im, y_lim=1):
+    if 0 > y_lim or y_lim > 1:
+        y_lim = 1
+    for y in range(int(im.size[1]*y_lim)):
+        for x in range(int(im.size[0]/2)):
+            p1 = im.getpixel((x, y))
+            im.putpixel((im.size[0] - 1 - x, y), p1)
+    return im
+
+def fold(im, y_lim=1):
+    if 0 > y_lim or y_lim > 1:
+        y_lim = 1
+    for x in range(int(im.size[0]*y_lim)):
+        for y in range(int(im.size[1]/2)):
+            p1 = im.getpixel((x, y))
+            im.putpixel((x, im.size[1] - 1 -  y), p1)
+    return im
+
+w = spiral(Image.open(generate_adr("stairs")),7)
+x = reflect(w)
+y = fold(x).filter(ImageFilter.BLUR)
+y.show()
+
+
+
